@@ -2,10 +2,12 @@ body {
     text-align: center;
     background-color: #ffdde1;
     font-family: 'Arial', sans-serif;
+    overflow: hidden; /* Prevents scrolling */
 }
 
 h1 {
     color: #ff4081;
+    font-size: 24px;
 }
 
 canvas {
@@ -13,6 +15,7 @@ canvas {
     display: block;
     margin: 0 auto;
     border-radius: 10px;
+    max-width: 100%;
 }
 
 #message {
@@ -20,4 +23,26 @@ canvas {
     color: #d63384;
     font-weight: bold;
     display: none;
+}
+
+/* Mobile Controls */
+.controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+button {
+    background-color: #ff4081;
+    color: white;
+    border: none;
+    padding: 15px;
+    margin: 5px;
+    font-size: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+button:active {
+    background-color: #d63384;
 }
