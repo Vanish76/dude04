@@ -91,7 +91,7 @@ function gameLoop() {
 
     // Show love message when score is high
     if (score >= 10) {
-        document.getElementById("message").innerText = "You caught all the love! 💕";
+        document.getElementById("message").innerText = "You caught me";
         document.getElementById("message").style.display = "block";
     }
 
