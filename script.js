@@ -8,6 +8,8 @@ let hearts = [];
 let basket = { x: canvas.width / 2 - 25, y: canvas.height - 40, width: 50, height: 20 };
 let score = 0;
 let gameOver = false;
+let moveLeft = false;
+let moveRight = false;
 
 // Function to create hearts
 function createHeart() {
@@ -24,19 +26,21 @@ setInterval(() => {
     if (!gameOver) hearts.push(createHeart());
 }, 1000);
 
-// Mobile Controls (Touch Buttons)
-document.getElementById("leftBtn").addEventListener("touchstart", () => {
-    if (basket.x > 0) basket.x -= 20;
-});
-document.getElementById("rightBtn").addEventListener("touchstart", () => {
-    if (basket.x < canvas.width - basket.width) basket.x += 20;
-});
+// Touch & Hold Movement (Fixing Deadlock)
+document.getElementById("leftBtn").addEventListener("touchstart", () => moveLeft = true);
+document.getElementById("leftBtn").addEventListener("touchend", () => moveLeft = false);
+document.getElementById("rightBtn").addEventListener("touchstart", () => moveRight = true);
+document.getElementById("rightBtn").addEventListener("touchend", () => moveRight = false);
 
 // Game loop
 function gameLoop() {
     if (gameOver) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Move basket smoothly
+    if (moveLeft && basket.x > 0) basket.x -= 5;
+    if (moveRight && basket.x < canvas.width - basket.width) basket.x += 5;
 
     // Draw the basket
     ctx.fillStyle = "#ff4081";
@@ -45,12 +49,12 @@ function gameLoop() {
     // Move and draw hearts
     hearts.forEach((heart, index) => {
         heart.y += heart.speed;
-        
+
         ctx.fillStyle = "red";
         ctx.beginPath();
         ctx.arc(heart.x, heart.y, heart.size / 2, 0, Math.PI * 2);
         ctx.fill();
-        
+
         // Check if the basket catches a heart
         if (
             heart.y + heart.size > basket.y &&
