@@ -1,9 +1,11 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+// Set canvas size dynamically
 canvas.width = window.innerWidth * 0.9;
 canvas.height = window.innerHeight * 0.6;
 
+// Game variables
 let hearts = [];
 let basket = { x: canvas.width / 2 - 25, y: canvas.height - 40, width: 50, height: 20 };
 let score = 0;
@@ -25,11 +27,15 @@ setInterval(() => {
     hearts.push(createHeart());
 }, 1000);
 
-// Mobile Controls (Touch & Hold Movement)
+// Mobile Controls (Fix Deadlock)
 document.getElementById("leftBtn").addEventListener("touchstart", () => moveLeft = true);
 document.getElementById("leftBtn").addEventListener("touchend", () => moveLeft = false);
 document.getElementById("rightBtn").addEventListener("touchstart", () => moveRight = true);
 document.getElementById("rightBtn").addEventListener("touchend", () => moveRight = false);
+
+// Fix deadlock by handling touchmove
+document.getElementById("leftBtn").addEventListener("touchmove", (e) => e.preventDefault());
+document.getElementById("rightBtn").addEventListener("touchmove", (e) => e.preventDefault());
 
 // Game loop
 function gameLoop() {
@@ -44,7 +50,8 @@ function gameLoop() {
     ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
 
     // Move and draw hearts
-    hearts.forEach((heart, index) => {
+    for (let i = hearts.length - 1; i >= 0; i--) {
+        let heart = hearts[i];
         heart.y += heart.speed;
 
         ctx.fillStyle = "red";
@@ -58,15 +65,15 @@ function gameLoop() {
             heart.x > basket.x &&
             heart.x < basket.x + basket.width
         ) {
-            hearts.splice(index, 1);
+            hearts.splice(i, 1);
             score++;
         }
 
-        // If heart reaches the bottom, just remove it (instead of ending game)
+        // If heart reaches the bottom, just remove it (without breaking the game)
         if (heart.y > canvas.height) {
-            hearts.splice(index, 1);
+            hearts.splice(i, 1);
         }
-    });
+    }
 
     // Show score
     ctx.fillStyle = "#d63384";
