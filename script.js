@@ -7,7 +7,6 @@ canvas.height = window.innerHeight * 0.6;
 let hearts = [];
 let basket = { x: canvas.width / 2 - 25, y: canvas.height - 40, width: 50, height: 20 };
 let score = 0;
-let gameOver = false;
 let moveLeft = false;
 let moveRight = false;
 
@@ -23,10 +22,10 @@ function createHeart() {
 
 // Add hearts at intervals
 setInterval(() => {
-    if (!gameOver) hearts.push(createHeart());
+    hearts.push(createHeart());
 }, 1000);
 
-// Touch & Hold Movement (Fixing Deadlock)
+// Mobile Controls (Touch & Hold Movement)
 document.getElementById("leftBtn").addEventListener("touchstart", () => moveLeft = true);
 document.getElementById("leftBtn").addEventListener("touchend", () => moveLeft = false);
 document.getElementById("rightBtn").addEventListener("touchstart", () => moveRight = true);
@@ -34,8 +33,6 @@ document.getElementById("rightBtn").addEventListener("touchend", () => moveRight
 
 // Game loop
 function gameLoop() {
-    if (gameOver) return;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Move basket smoothly
@@ -65,9 +62,9 @@ function gameLoop() {
             score++;
         }
 
-        // End game if hearts reach bottom
+        // If heart reaches the bottom, just remove it (instead of ending game)
         if (heart.y > canvas.height) {
-            gameOver = true;
+            hearts.splice(index, 1);
         }
     });
 
@@ -80,7 +77,6 @@ function gameLoop() {
     if (score >= 10) {
         document.getElementById("message").innerText = "You caught all the love! 💕";
         document.getElementById("message").style.display = "block";
-        gameOver = true;
     }
 
     requestAnimationFrame(gameLoop);
