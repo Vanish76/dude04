@@ -15,7 +15,7 @@ let moveRight = false;
 // Function to create hearts
 function createHeart() {
     return {
-        x: Math.random() * (canvas.width - 20),
+        x: Math.random() * (canvas.width - 30),
         y: 0,
         size: 20,
         speed: 2 + Math.random() * 2
@@ -37,6 +37,25 @@ document.getElementById("rightBtn").addEventListener("touchend", () => moveRight
 document.getElementById("leftBtn").addEventListener("touchmove", (e) => e.preventDefault());
 document.getElementById("rightBtn").addEventListener("touchmove", (e) => e.preventDefault());
 
+// Function to draw a heart shape
+function drawHeart(x, y, size) {
+    ctx.fillStyle = "red";
+    ctx.beginPath();
+    
+    // Left Arc
+    ctx.moveTo(x, y + size / 4);
+    ctx.arc(x - size / 4, y, size / 4, Math.PI, 0, false);
+    
+    // Right Arc
+    ctx.arc(x + size / 4, y, size / 4, Math.PI, 0, false);
+    
+    // Bottom Triangle
+    ctx.lineTo(x, y + size);
+    ctx.closePath();
+    
+    ctx.fill();
+}
+
 // Game loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -54,10 +73,8 @@ function gameLoop() {
         let heart = hearts[i];
         heart.y += heart.speed;
 
-        ctx.fillStyle = "red";
-        ctx.beginPath();
-        ctx.arc(heart.x, heart.y, heart.size / 2, 0, Math.PI * 2);
-        ctx.fill();
+        // Draw heart shape
+        drawHeart(heart.x, heart.y, heart.size);
 
         // Check if the basket catches a heart
         if (
@@ -69,7 +86,7 @@ function gameLoop() {
             score++;
         }
 
-        // If heart reaches the bottom, just remove it (without breaking the game)
+        // If heart reaches the bottom, just remove it
         if (heart.y > canvas.height) {
             hearts.splice(i, 1);
         }
