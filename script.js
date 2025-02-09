@@ -11,6 +11,8 @@ let basket = { x: canvas.width / 2 - 25, y: canvas.height - 40, width: 50, heigh
 let score = 0;
 let moveLeft = false;
 let moveRight = false;
+let heartsFallen = 0;  // Track how many hearts have fallen
+let heartSpeed = 2;  // Initial heart speed
 
 // Function to create hearts
 function createHeart() {
@@ -18,7 +20,7 @@ function createHeart() {
         x: Math.random() * (canvas.width - 20),
         y: 0,
         size: 20,
-        speed: 2 + Math.random() * 2
+        speed: heartSpeed
     };
 }
 
@@ -54,6 +56,7 @@ function gameLoop() {
         let heart = hearts[i];
         heart.y += heart.speed;
 
+        // Draw the heart shape
         ctx.fillStyle = "red";
         ctx.beginPath();
         ctx.arc(heart.x, heart.y, heart.size / 2, 0, Math.PI * 2);
@@ -67,9 +70,15 @@ function gameLoop() {
         ) {
             hearts.splice(i, 1);
             score++;
+            heartsFallen++;  // Increase the heart count after each catch
+
+            // Increase the heart speed after every 10 hearts
+            if (heartsFallen % 10 === 0) {
+                heartSpeed *= 2;  // Double the speed after every 10 hearts
+            }
         }
 
-        // If heart reaches the bottom, just remove it (without breaking the game)
+        // If the heart reaches the bottom, just remove it (without breaking the game)
         if (heart.y > canvas.height) {
             hearts.splice(i, 1);
         }
