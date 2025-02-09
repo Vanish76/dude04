@@ -18,13 +18,10 @@ function createHeart() {
     return {
         x: Math.random() * (canvas.width - 30),
         y: 0,
-        size: 20,
+        size: 20, // Heart size is reduced to fit better
         speed: heartSpeed
     };
 }
-
-//
-
 
 // Add hearts at intervals
 setInterval(() => {
@@ -45,18 +42,18 @@ document.getElementById("rightBtn").addEventListener("touchmove", (e) => e.preve
 function drawHeart(x, y, size) {
     ctx.fillStyle = "red";
     ctx.beginPath();
-    
+
     // Left Arc
     ctx.moveTo(x, y + size / 4);
     ctx.arc(x - size / 4, y, size / 4, Math.PI, 0, false);
-    
+
     // Right Arc
     ctx.arc(x + size / 4, y, size / 4, Math.PI, 0, false);
-    
+
     // Bottom Triangle
     ctx.lineTo(x, y + size);
     ctx.closePath();
-    
+
     ctx.fill();
 }
 
@@ -95,6 +92,15 @@ function gameLoop() {
             hearts.splice(i, 1);
         }
     }
+
+    // Update heart speed every 20 points
+    if (score >= 20 && score < 40) {
+        heartSpeed = 4; // Double speed at 20 points
+    } else if (score >= 40 && score < 60) {
+        heartSpeed = 6; // Increase speed further at 40 points
+    } else if (score >= 60 && score < 80) {
+        heartSpeed = 8; // Further increase speed at 60 points
+    } // Continue to increase speed as needed
 
     // Show score
     ctx.fillStyle = "#d63384";
