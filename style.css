@@ -1,0 +1,23 @@
+body {
+    text-align: center;
+    background-color: #ffdde1;
+    font-family: 'Arial', sans-serif;
+}
+
+h1 {
+    color: #ff4081;
+}
+
+canvas {
+    background-color: white;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+#message {
+    font-size: 24px;
+    color: #d63384;
+    font-weight: bold;
+    display: none;
+}
