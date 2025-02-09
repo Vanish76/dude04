@@ -11,15 +11,14 @@ let basket = { x: canvas.width / 2 - 25, y: canvas.height - 40, width: 50, heigh
 let score = 0;
 let moveLeft = false;
 let moveRight = false;
-let heartSpeed = 2; // Initial speed
 
 // Function to create hearts
 function createHeart() {
     return {
-        x: Math.random() * (canvas.width - 30),
+        x: Math.random() * (canvas.width - 20),
         y: 0,
-        size: 20, // Heart size is reduced to fit better
-        speed: heartSpeed
+        size: 20,
+        speed: 2 + Math.random() * 2
     };
 }
 
@@ -38,25 +37,6 @@ document.getElementById("rightBtn").addEventListener("touchend", () => moveRight
 document.getElementById("leftBtn").addEventListener("touchmove", (e) => e.preventDefault());
 document.getElementById("rightBtn").addEventListener("touchmove", (e) => e.preventDefault());
 
-// Function to draw a heart shape
-function drawHeart(x, y, size) {
-    ctx.fillStyle = "red";
-    ctx.beginPath();
-
-    // Left Arc
-    ctx.moveTo(x, y + size / 4);
-    ctx.arc(x - size / 4, y, size / 4, Math.PI, 0, false);
-
-    // Right Arc
-    ctx.arc(x + size / 4, y, size / 4, Math.PI, 0, false);
-
-    // Bottom Triangle
-    ctx.lineTo(x, y + size);
-    ctx.closePath();
-
-    ctx.fill();
-}
-
 // Game loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -74,8 +54,10 @@ function gameLoop() {
         let heart = hearts[i];
         heart.y += heart.speed;
 
-        // Draw heart shape
-        drawHeart(heart.x, heart.y, heart.size);
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        ctx.arc(heart.x, heart.y, heart.size / 2, 0, Math.PI * 2);
+        ctx.fill();
 
         // Check if the basket catches a heart
         if (
@@ -87,20 +69,11 @@ function gameLoop() {
             score++;
         }
 
-        // If heart reaches the bottom, just remove it
+        // If heart reaches the bottom, just remove it (without breaking the game)
         if (heart.y > canvas.height) {
             hearts.splice(i, 1);
         }
     }
-
-    // Update heart speed every 20 points
-    if (score >= 20 && score < 40) {
-        heartSpeed = 4; // Double speed at 20 points
-    } else if (score >= 40 && score < 60) {
-        heartSpeed = 6; // Increase speed further at 40 points
-    } else if (score >= 60 && score < 80) {
-        heartSpeed = 8; // Further increase speed at 60 points
-    } // Continue to increase speed as needed
 
     // Show score
     ctx.fillStyle = "#d63384";
